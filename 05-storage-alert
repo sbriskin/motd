@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+#
+# MOTD Low storage alert.
+#
+# Copyright (c) 2019 Sergey Briskin
+#
+##########################################
+#      DO NOT CHANGE THE LANGUAGE!
+# Export LANG so we get consistent results
+        export LANG=en_US.UTF-8
+##########################################
+
+threshold="90"
+
+# Storage information (exclude tmpfs, docker overlays, fuse partitions and other)
+cmd="df -khl -x devtmpfs -x tmpfs -x fuse -x fuseblk -x overlay"
+result=$( $cmd |grep -v "Filesystem" | awk '{ print $5 }' | sed 's/%//g')
+
+i=2
+for percent in $result; do
+    if ((percent > threshold)); then
+        partition=$( $cmd | head -$i | tail -1| awk '{print $1}')
+        msg="$msg $partition is $(tput setaf 196)${percent}%$(tput sgr0) full \\n"
+    fi
+    let i=$i+1
+done
+if [[ "${msg}" ]]; then
+    echo "$(tput bold)Warning!$(tput sgr0)"
+    echo -e ${msg}
+fi

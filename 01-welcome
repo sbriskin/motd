@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+#
+# MOTD Welcome Message.
+#
+# Copyright (c) 2019 Sergey Briskin
+#
+##########################################
+#      DO NOT CHANGE THE LANGUAGE!
+# Export LANG so we get consistent results
+        export LANG=en_US.UTF-8
+##########################################
+
+# Linux distro name
+if [ -x "$(command -v lsb_release)" ]; then
+    DISTRO=$(lsb_release -ds)
+elif [ -f "/etc/os-release" ]; then
+    source "/etc/os-release"
+    DISTRO="${PRETTY_NAME}"
+elif [ -x "$(command -v uname)" ]; then
+    DISTRO=$(uname)
+else
+    # Unknown or corrupted OS
+    exit 1
+fi
+
+HOSTNAME=$(uname -n)
+KERNEL=$(uname -r)
+
+# Time of the day
+NOW=$(date +"%H:%M")
+HOUR=$(date +"%H")
+if   [ $HOUR -ge 0 ]  && [ $HOUR -lt 5 ];  then TIME="night"
+elif [ $HOUR -ge 5 ]  && [ $HOUR -lt 12 ]; then TIME="morning"
+elif [ $HOUR -ge 12 ] && [ $HOUR -lt 17 ]; then TIME="afternoon"
+elif [ $HOUR -ge 17 ] && [ $HOUR -le 23 ]; then TIME="evening"
+fi
+
+# System uptime
+uptime=$(cat /proc/uptime | cut -f1 -d.)
+upDays=$((uptime/60/60/24))
+upHours=$((uptime/60/60%24))
+upMins=$((uptime/60%60))
+upSecs=$((uptime%60))
+
+# System Params
+PSS=$(ps aux             | wc -l)
+LOAD=$(cat /proc/loadavg | awk '{printf("%3.1f% %"), $2}')
+MEM_USAGE=$(free -m      | awk '/Mem/ { printf("%3.1f% %", $3/$2*100) }')
+MEM_TOTAL="$(free -m     | awk '/Mem/ { print $2*0.001 }') Gib"
+SWAP_USAGE=$(free -m     | awk '/Swap/ { printf("%3.1f% %", $3/$2*100) }')
+SWAP_TOTAL="$(free -m    | awk '/Swap/ { print $2*0.001 }') Gib"
+USERS=$(users            | wc -w)
+
+# IP address
+_IP=$(hostname -I) || true
+if [ "$_IP" ]; then
+    IPADDR="IP Address..........: $_IP"
+fi
+
+# Storage information (exclude tmpfs, docker overlays, fuse partitions and other)
+STORAGE_CMD="df -khl -x devtmpfs -x tmpfs -x fuse -x fuseblk -x overlay --total"
+STORAGE_TOTAL=$($STORAGE_CMD | tail -n 1 | awk '{print $2}')
+STORAGE_FREE=$( $STORAGE_CMD | tail -n 1 | awk '{print $4}')
+
+# Hostname banner
+if   [ "$(command -v figlet)" ]     && [ -x $(command -v figlet) ];     then BANNER="figlet"
+elif [ "$(command -v toilet)" ]     && [ -x $(command -v toilet) ];     then BANNER="toilet"
+elif [ "$(command -v banner)" ]     && [ -x $(command -v banner) ];     then BANNER="banner"
+elif [ "$(command -v sysvbanner)" ] && [ -x $(command -v sysvbanner) ]; then BANNER="sysvbanner"
+fi
+${BANNER} ${HOSTNAME^^}
+
+cat << EOF
+Good ${TIME}! Welcome to ${HOSTNAME}! Current time: ${NOW}
+OS version..........: ${DISTRO}
+Kernel version......: ${KERNEL}
+System uptime.......: ${upDays} days ${upHours} hours ${upMins} minutes ${upSecs} seconds
+${IPADDR}
+Users...............: Currently ${USERS} user(s) logged on
+Processes...........: ${PSS} running
+System load.........: ${LOAD}
+Memory usage........: ${MEM_USAGE} of ${MEM_TOTAL}
+Swap usage..........: ${SWAP_USAGE} of ${SWAP_TOTAL}
+Storage.............: ${STORAGE_FREE} of ${STORAGE_TOTAL} available
+
+EOF
