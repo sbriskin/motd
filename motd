@@ -2,7 +2,7 @@
 #
 # Show the message of the day
 #
-# Copyright (C) 2019 Sergey Briskin
+# Copyright (c) 2019 Sergey Briskin
 #
 for x in /etc/update-motd.d/*
 do

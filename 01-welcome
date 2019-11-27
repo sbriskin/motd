@@ -63,10 +63,10 @@ STORAGE_TOTAL=$($STORAGE_CMD | tail -n 1 | awk '{print $2}')
 STORAGE_FREE=$( $STORAGE_CMD | tail -n 1 | awk '{print $4}')
 
 # Hostname banner
-if   [ "$(command -v figlet)" ]     && [ -x $(command -v figlet) ];     then BANNER="figlet"
-elif [ "$(command -v toilet)" ]     && [ -x $(command -v toilet) ];     then BANNER="toilet"
-elif [ "$(command -v banner)" ]     && [ -x $(command -v banner) ];     then BANNER="banner"
-elif [ "$(command -v sysvbanner)" ] && [ -x $(command -v sysvbanner) ]; then BANNER="sysvbanner"
+if   [ "$(command -v figlet)" ]     && [ -x "$(command -v figlet)" ];     then BANNER="figlet"
+elif [ "$(command -v toilet)" ]     && [ -x "$(command -v toilet)" ];     then BANNER="toilet"
+elif [ "$(command -v banner)" ]     && [ -x "$(command -v banner)" ];     then BANNER="banner"
+elif [ "$(command -v sysvbanner)" ] && [ -x "$(command -v sysvbanner)" ]; then BANNER="sysvbanner"
 fi
 ${BANNER} ${HOSTNAME^^}
 
