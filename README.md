@@ -8,7 +8,7 @@ Installation
 
 Run `sudo make install` to install scripts
 
-For systems without the systemd motd package place the `/usr/bin/motd` execution line in the `/etc/profile` file.
+For systems without the systemd motd package (like CentOS) place `motd.sh` file into `/etc/profile.d` directory.
 
 Uninstall
 ---------

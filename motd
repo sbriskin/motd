@@ -2,21 +2,25 @@
 #
 # Show the message of the day
 #
-# Copyright (c) 2019 Sergey Briskin
+# Copyright (C) 2019-2020 Sergey Briskin
+# License: MIT
 #
 for x in /etc/update-motd.d/*
 do
     if [ "$1" = "-a" ]; then
         if [ -r "$x" ]; then
-            bash $x
+            bash "$x"
         fi
     else
         if [ -x "$x" ]; then
-            bash $x
+            bash "$x"
         fi
     fi
 done
 
 if [ -r "/etc/motd" ]; then
     cat "/etc/motd"
+    if [ -r "/etc/motd.tail" ]; then
+        cat "/etc/motd.tail"
+    fi
 fi

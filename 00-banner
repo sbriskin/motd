@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#
+# MOTD Banner
+#
+# Copyright (C) 2020 Sergey Briskin
+# License: MIT
+#
+
+if [[ -f "/etc/banner" ]]; then
+    cat /etc/banner
+elif [[ -f "/etc/default/banner" ]]; then
+    cat /etc/default/banner
+fi
+exit 0

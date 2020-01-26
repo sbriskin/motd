@@ -11,12 +11,14 @@ install: ## Install MOTD files to their places
 	@echo "Installing to $(DIR)"
 	mkdir -p $(DIR)/
 	cp ./motd /usr/bin/motd
+	cp ./00-banner $(DIR)/
 	cp ./01-welcome $(DIR)/
 	cp ./05-storage-alert $(DIR)/
 
 .PHONY: uninstall
 uninstall: ## Remove MOTD files
 	@echo "Uninstalling from $(DIR)"
+	rm $(DIR)/00-banner
 	rm $(DIR)/01-welcome
 	rm $(DIR)/05-storage-alert
 	rm /usr/bin/motd

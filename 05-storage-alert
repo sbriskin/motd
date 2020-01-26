@@ -2,12 +2,13 @@
 #
 # MOTD Low storage alert.
 #
-# Copyright (c) 2019 Sergey Briskin
+# Copyright (C) 2019-2020 Sergey Briskin
+# License: MIT
 #
 ##########################################
 #      DO NOT CHANGE THE LANGUAGE!
-# Export LANG so we get consistent results
-        export LANG=en_US.UTF-8
+# Using en_US so we get consistent results
+        export LC_ALL=en_US.UTF-8
 ##########################################
 
 threshold="90"
@@ -22,9 +23,9 @@ for percent in $result; do
         partition=$( $cmd | head -$i | tail -1| awk '{print $1}')
         msg="$msg $partition is $(tput setaf 196)${percent}%$(tput sgr0) full \\n"
     fi
-    let i=$i+1
+    (( i=i+1 ))
 done
 if [[ "${msg}" ]]; then
     echo "$(tput bold)Warning!$(tput sgr0)"
-    echo -e ${msg}
+    echo -e "${msg}"
 fi

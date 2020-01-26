@@ -2,12 +2,13 @@
 #
 # MOTD Welcome Message.
 #
-# Copyright (c) 2019 Sergey Briskin
+# Copyright (C) 2019-2020 Sergey Briskin
+# License: MIT
 #
 ##########################################
 #      DO NOT CHANGE THE LANGUAGE!
-# Export LANG so we get consistent results
-        export LANG=en_US.UTF-8
+# Using en_US so we get consistent results
+        export LC_ALL=en_US.UTF-8
 ##########################################
 
 # Linux distro name
@@ -68,7 +69,9 @@ elif [ "$(command -v toilet)" ]     && [ -x "$(command -v toilet)" ];     then B
 elif [ "$(command -v banner)" ]     && [ -x "$(command -v banner)" ];     then BANNER="banner"
 elif [ "$(command -v sysvbanner)" ] && [ -x "$(command -v sysvbanner)" ]; then BANNER="sysvbanner"
 fi
-${BANNER} ${HOSTNAME^^}
+if [[ "${BANNER}" ]]; then
+    ${BANNER} ${HOSTNAME^^}
+fi
 
 cat << EOF
 Good ${TIME}! Welcome to ${HOSTNAME}! Current time: ${NOW}
