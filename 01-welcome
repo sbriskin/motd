@@ -70,7 +70,7 @@ elif [ "$(command -v banner)" ]     && [ -x "$(command -v banner)" ];     then B
 elif [ "$(command -v sysvbanner)" ] && [ -x "$(command -v sysvbanner)" ]; then BANNER="sysvbanner"
 fi
 if [[ "${BANNER}" ]]; then
-    ${BANNER} ${HOSTNAME^^}
+    ${BANNER} "${HOSTNAME^^}"
 fi
 
 cat << EOF
